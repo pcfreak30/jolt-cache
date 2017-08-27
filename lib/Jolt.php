@@ -132,6 +132,16 @@ class Jolt extends PluginAbstract {
 	public function init() {
 		parent::init();
 
+		if ( $this->early_load ) {
+			do_action( 'jolt_cache_loaded_early' );
+			add_action( 'plugins_loaded', function () {
+				do_action( 'jolt_cache_loaded' );
+			}, 11 );
+		}
+		if ( ! $this->early_load ) {
+			do_action( 'jolt_cache_loaded' );
+		}
+
 		return $this;
 	}
 
