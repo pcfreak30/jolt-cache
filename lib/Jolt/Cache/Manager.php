@@ -8,6 +8,11 @@ use pcfreak30\ComposePress\ManagerAbstract;
  * Class Manager
  */
 class Manager extends ManagerAbstract {
+
+	const MODULE_NAMESPACE = '\\Jolt\\Cache\\Store';
+
+	protected $modules = [ 'File' ];
+
 	/**
 	 * @param string|null $name
 	 *
@@ -15,10 +20,10 @@ class Manager extends ManagerAbstract {
 	 * @throws \Exception
 	 */
 	public function get_cache_store( $name = null ) {
-		if ( empty( $name ) ) {
+		if ( null === $name ) {
 			$name = JOLT_CACHE_STORE;
 		}
-		$store = $this->get_module( ucfirst( $name ) );
+		$store = $this->get_module( ucfirst( strtolower( $name ) ) );
 		if ( empty( $store ) ) {
 			throw new \Exception( sprintf( __( 'Cache store % does not exist' ), $name ) );
 		}
