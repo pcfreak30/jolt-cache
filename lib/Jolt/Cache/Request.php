@@ -108,15 +108,16 @@ class Request extends ComponentAbstract {
 			$cache = html5qp( $cache );
 		}
 		if ( apply_filters( 'jolt_cache_store_cache', true ) ) {
-			/** @var \QueryPath\DOMQuery $cache */
-			if ( $is_html ) {
-				$cache->append( $this->get_cache_footprint() );
-			}
 			/** @var \Jolt\Cache\Store\StoreAbstract $store */
 			$store = $this->plugin->cache_manager->get_cache_store();
 
 			$cache = $cache->html5();
 			$cache = apply_filters( 'jolt_cache_post_buffer', $cache );
+
+			/** @var string $cache */
+			if ( $is_html ) {
+				$cache = preg_replace( '/(<\/html>.*)/is', $this->get_cache_footprint() . '$1', $cache );
+			}
 
 			$store->save_url( $this->request_uri, $cache );
 
@@ -124,7 +125,7 @@ class Request extends ComponentAbstract {
 				header( 'Last-Modified: ' . gmdate( 'D, d M Y H:i:s', $store->get_url_modified_time( $this->request_uri ) ) . ' GMT' );
 			}
 		}
-
+		/** @var DOMQuery $cache */
 		if ( $is_html && ( $cache instanceof DOMQuery ) ) {
 			$cache = $cache->html5();
 		}
