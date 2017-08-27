@@ -204,6 +204,13 @@ class Jolt extends PluginAbstract {
 	}
 
 	/**
+	 * @param bool $early_load
+	 */
+	public function set_early_load( $early_load ) {
+		$this->early_load = $early_load;
+	}
+
+	/**
 	 * @return \Jolt\Cache\Manager
 	 */
 	public function get_cache_manager() {
