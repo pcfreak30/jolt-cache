@@ -140,15 +140,17 @@ class Jolt extends PluginAbstract {
 
 		if ( $this->early_load ) {
 			do_action( 'jolt_cache_loaded_early' );
-			add_action( 'plugins_loaded', function () {
-				do_action( 'jolt_cache_loaded' );
-			}, 11 );
+			add_action( 'plugins_loaded', [ $this, 'do_loaded_delayed' ], 11 );
 		}
-		if ( ! $this->early_load ) {
+		if ( ! $this->early_load && ! has_action( 'plugins_loaded', [ $this, 'do_loaded_delayed' ] ) ) {
 			do_action( 'jolt_cache_loaded' );
 		}
 
 		return $this;
+	}
+
+	public function do_loaded_delayed() {
+		do_action( 'jolt_cache_loaded' );
 	}
 
 	/**
