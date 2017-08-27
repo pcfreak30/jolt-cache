@@ -51,8 +51,6 @@ class Request extends ComponentAbstract {
 			$stop = true;
 		}
 		if ( $stop ) {
-			$this->plugin->early_load = false;
-
 			return;
 		}
 		$this->request_uri = $request_uri;
