@@ -97,7 +97,10 @@ class Jolt extends PluginAbstract {
 			$this->early_load = true;
 			wp_set_lang_dir();
 			wp_load_translations_early();
+
+			return;
 		}
+		$this->early_load = false;
 	}
 
 	/**
@@ -130,6 +133,7 @@ class Jolt extends PluginAbstract {
 	 * @return $this
 	 */
 	public function init() {
+		$this->maybe_early_load();
 		do_action( 'jolt_cache_before_init' );
 
 		parent::init();
