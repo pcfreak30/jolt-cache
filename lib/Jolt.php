@@ -130,6 +130,8 @@ class Jolt extends PluginAbstract {
 	 * @return $this
 	 */
 	public function init() {
+		do_action( 'jolt_cache_before_init' );
+
 		parent::init();
 
 		if ( $this->early_load ) {
