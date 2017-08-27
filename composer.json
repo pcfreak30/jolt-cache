@@ -8,7 +8,8 @@
   ],
   "require": {
     "pcfreak30/composepress": "^0.2.0",
-    "level-2/dice": "dev-v2.0-PHP5.4-5.5"
+    "level-2/dice": "dev-v2.0-PHP5.4-5.5",
+    "querypath/querypath": "^3.0"
   },
   "autoload": {
     "files": [
