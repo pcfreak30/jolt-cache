@@ -9,6 +9,7 @@ use QueryPath\DOMQuery;
  * Class Request
  *
  * @package Jolt\Cache
+ * @property \Jolt $plugin
  */
 class Request extends ComponentAbstract {
 
@@ -25,9 +26,10 @@ class Request extends ComponentAbstract {
 	 *
 	 */
 	public function process() {
+		$stop = false;
 		// Don't cache robots.txt && .htaccess directory (it's happened sometimes with weird server configuration).
 		if ( false !== stripos( $_SERVER['REQUEST_URI'], 'robots.txt' ) || false !== stripos( $_SERVER['REQUEST_URI'], '.htaccess' ) ) {
-			return;
+			$stop = true;
 		}
 
 		$request_uri = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
@@ -37,15 +39,20 @@ class Request extends ComponentAbstract {
 				'xml',
 				'xsl',
 			], true ) ) {
-			return;
+			$stop = true;
 		}
 
 		// Don't cache if user is in admin.
 		if ( is_admin() ) {
-			return;
+			$stop = true;
 		}
 
 		if ( defined( 'DOING_AJAX' ) && DOING_AJAX ) {
+			$stop = true;
+		}
+		if ( $stop ) {
+			$this->plugin->early_load = false;
+
 			return;
 		}
 		$this->request_uri = $request_uri;
