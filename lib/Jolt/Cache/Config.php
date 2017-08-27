@@ -11,7 +11,9 @@ use pcfreak30\ComposePress\ComponentAbstract;
  *
  * @package Jolt\Cache
  * @property \Jolt  $plugin
+ * @property string $cache_base_path
  * @property string $cache_path
+ * @property string $cache_host
  * @property string $wp_config_path
  */
 class Config extends ComponentAbstract {
@@ -20,16 +22,36 @@ class Config extends ComponentAbstract {
 	 */
 	private $cache_path;
 
+	/**
+	 * @var string
+	 */
+	private $cache_base_path;
+
+	/**
+	 * @var string
+	 */
 	private $wp_config_path;
+	/**
+	 * @var string
+	 */
+	private $cache_host;
 
 	/**
 	 *
 	 */
 	public function init() {
-		$this->cache_path     = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'jolt' . DIRECTORY_SEPARATOR;
-		$this->wp_config_path = $this->find_wp_config();
+		$this->cache_base_path = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'jolt' . DIRECTORY_SEPARATOR;
+		$this->cache_path      = $this->cache_base_path . 'files' . DIRECTORY_SEPARATOR;
+		$this->wp_config_path  = $this->find_wp_config();
+		$host                  = ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : time();
+		$host                  = trim( strtolower( $host ), '.' );
+		$this->cache_host      = urlencode( $host );
+
 	}
 
+	/**
+	 * @return bool|string
+	 */
 	private function find_wp_config() {
 		if ( $this->plugin->early_load ) {
 			return $this->find_wp_config_early();
@@ -46,6 +68,9 @@ class Config extends ComponentAbstract {
 		return false;
 	}
 
+	/**
+	 * @return bool|string
+	 */
 	private function find_wp_config_early() {
 		$config_file     = ABSPATH . 'wp-config.php';
 		$config_file_alt = dirname( ABSPATH ) . DIRECTORY_SEPARATOR . 'wp-config.php';
@@ -71,5 +96,19 @@ class Config extends ComponentAbstract {
 	 */
 	public function get_wp_config_path() {
 		return $this->wp_config_path;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_cache_base_path() {
+		return $this->cache_base_path;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_cache_host() {
+		return $this->cache_host;
 	}
 }
