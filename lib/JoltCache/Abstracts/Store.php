@@ -1,11 +1,26 @@
 <?php
 
-namespace Jolt\Cache\Store;
+namespace JoltCache\Abstracts;
 
-use pcfreak30\ComposePress\ComponentAbstract;
 
-abstract class StoreAbstract extends ComponentAbstract {
+use ComposePress\Core\Abstracts\Component;
+use ComposePress\Settings\Abstracts\Page;
+
+/**
+ * Class Store
+ *
+ * @package JoltCache\Abstracts
+ * @property string $friendly_name
+ * @property string $name
+ */
+abstract class Store extends Component {
+	/**
+	 *
+	 */
 	const NAME = '';
+	/**
+	 *
+	 */
 	const FRIENDLY_NAME = '';
 
 	/**
@@ -17,20 +32,36 @@ abstract class StoreAbstract extends ComponentAbstract {
 		}
 	}
 
+	/**
+	 * @param $stores
+	 *
+	 * @return mixed
+	 */
 	public function register( $stores ) {
 		$stores[ $this->get_name() ] = $this->get_friendly_name();
 
 		return $stores;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function get_name() {
 		return static::NAME;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function get_friendly_name() {
 		return __( static::FRIENDLY_NAME, $this->plugin->get_safe_slug() );
 	}
 
+	/**
+	 * @param $url
+	 *
+	 * @return mixed
+	 */
 	abstract public function purge_url( $url );
 
 	/**

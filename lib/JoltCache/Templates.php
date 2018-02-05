@@ -1,18 +1,18 @@
 <?php
 
 
-namespace Jolt\Cache;
+namespace JoltCache;
 
+use ComposePress\Core\Abstracts\Component;
 
-use pcfreak30\ComposePress\ComponentAbstract;
 
 /**
  * Class Templates
  *
  * @package Jolt\Cache
- * @property \Jolt $plugin
+ * @property \JoltCache $plugin
  */
-class Templates extends ComponentAbstract {
+class Templates extends Component {
 
 	private $template_dir;
 

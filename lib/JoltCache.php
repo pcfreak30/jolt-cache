@@ -1,24 +1,28 @@
 <?php
 
 
-use Jolt\Cache\Config;
-use Jolt\Cache\Installer;
-use Jolt\Cache\Manager;
-use Jolt\Cache\Request;
-use Jolt\Cache\Templates;
-use pcfreak30\ComposePress\PluginAbstract;
+use JoltCache\Config;
+use JoltCache\Installer;
+use JoltCache\Managers\Store as CacheManager;
+use JoltCache\Request;
+use JoltCache\Templates;
+use JoltCache\UI;
+use ComposePress\Core\Abstracts\Plugin;
+use ComposePress\Settings;
 
 /**
  * Class Jolt
  *
- * @property \Jolt\Cache\Config    $config
- * @property \Jolt\Cache\Installer $installer
- * @property \Jolt\Cache\Request   $request
- * @property \Jolt\Cache\Templates $templates
- * @property \Jolt\Cache\Manager   $cache_manager
- * @property bool                  $early_load
+ * @property \JoltCache\Config                $config
+ * @property \JoltCache\Installer             $installer
+ * @property \JoltCache\Request               $request
+ * @property \JoltCache\Templates             $templates
+ * @property \JoltCache\Managers\Store        $cache_manager
+ * @property \\ComposePress\Core $settings
+ * @property \JoltCache\UI                    $admin_ui
+ * @property bool                             $early_load
  */
-class Jolt extends PluginAbstract {
+class JoltCache extends Plugin {
 
 	/**
 	 *
@@ -30,60 +34,78 @@ class Jolt extends PluginAbstract {
 	 */
 	const VERSION = '0.1.0';
 	/**
-	 * @var \Jolt\Cache\Config
+	 * @var \JoltCache\Config
 	 */
 	private $config;
 	/**
-	 * @var \Jolt\Cache\Installer
+	 * @var \JoltCache\Installer
 	 */
 	private $installer;
 	/**
-	 * @var \Jolt\Cache\Request
+	 * @var \JoltCache\Request
 	 */
 	private $request;
 	/**
-	 * @var \Jolt\Cache\Templates
+	 * @var \JoltCache\Templates
 	 */
 	private $templates;
 
 	/**
 	 * @var bool
 	 */
-	private $early_load = false;
+	private $early_load = null;
 	/**
-	 * @var \Jolt\Cache\Manager
+	 * @var \JoltCache\Managers\Store
 	 */
 	private $cache_manager;
+	/**
+	 * @var \JoltCache\UI
+	 */
+	private $admin_ui;
+	/**
+	 * @var \ComposePress\Settings
+	 */
+	private $settings;
 
 
 	/**
 	 * Jolt constructor.
 	 *
-	 * @param \Jolt\Cache\Config    $config
-	 * @param \Jolt\Cache\Templates $templates
-	 * @param \Jolt\Cache\Installer $installer
-	 * @param \Jolt\Cache\Request   $request
+	 * @param \JoltCache\Config    $config
+	 * @param \JoltCache\Templates $templates
+	 * @param \JoltCache\Installer $installer
+	 * @param \JoltCache\Request   $request
 	 */
 	/** @noinspection PhpMissingParentConstructorInspection */
 	/** @noinspection MagicMethodsValidityInspection
-	 * @param \Jolt\Cache\Config    $config
-	 * @param \Jolt\Cache\Templates $templates
-	 * @param \Jolt\Cache\Installer $installer
-	 * @param \Jolt\Cache\Request   $request
-	 * @param \Jolt\Cache\Manager   $cache_manager
+	 * @param \JoltCache\Config                $config
+	 * @param \JoltCache\Templates             $templates
+	 * @param \JoltCache\Installer             $installer
+	 * @param \JoltCache\Request               $request
+	 * @param \JoltCache\Managers\Store        $cache_manager
+	 * @param \ComposePress\Settings $settings
+	 * @param \JoltCache\UI                    $admin_ui
+	 *
+	 * @throws \ComposePress\Core\Exception\ContainerInvalid
+	 * @throws \ComposePress\Core\Exception\ContainerNotExists
+	 * @internal param \Jolt\Cache\Admin\Settings\UI $ui
 	 */
 	public function __construct(
 		Config $config,
 		Templates $templates,
 		Installer $installer,
 		Request $request,
-		Manager $cache_manager
+		CacheManager $cache_manager,
+		Settings $settings,
+		UI $admin_ui
 	) {
 		$this->config        = $config;
 		$this->templates     = $templates;
 		$this->installer     = $installer;
 		$this->request       = $request;
 		$this->cache_manager = $cache_manager;
+		$this->admin_ui      = $admin_ui;
+		$this->settings      = $settings;
 		$this->maybe_early_load();
 		$this->find_plugin_file();
 		$this->set_container();
@@ -93,6 +115,9 @@ class Jolt extends PluginAbstract {
 	 *
 	 */
 	private function maybe_early_load() {
+		if ( null !== $this->early_load ) {
+			return;
+		}
 		if ( ! doing_action( 'plugins_loaded' ) ) {
 			$this->early_load = true;
 			wp_set_lang_dir();
@@ -168,35 +193,28 @@ class Jolt extends PluginAbstract {
 	}
 
 	/**
-	 * @return \Jolt\Cache\Installer
+	 * @return \JoltCache\Installer
 	 */
 	public function get_installer() {
 		return $this->installer;
 	}
 
 	/**
-	 * @return \Jolt\Cache\Request
+	 * @return \JoltCache\Request
 	 */
 	public function get_request() {
 		return $this->request;
 	}
 
 	/**
-	 * @return \WP_Filesystem_Direct
-	 */
-	public function get_wp_filesystem() {
-		return parent::get_wp_filesystem();
-	}
-
-	/**
-	 * @return \Jolt\Cache\Config
+	 * @return \JoltCache\Config
 	 */
 	public function get_config() {
 		return $this->config;
 	}
 
 	/**
-	 * @return \Jolt\Cache\Templates
+	 * @return \JoltCache\Templates
 	 */
 	public function get_templates() {
 		return $this->templates;
@@ -217,9 +235,23 @@ class Jolt extends PluginAbstract {
 	}
 
 	/**
-	 * @return \Jolt\Cache\Manager
+	 * @return \JoltCache\Managers\Store
 	 */
 	public function get_cache_manager() {
 		return $this->cache_manager;
+	}
+
+	/**
+	 * @return \JoltCache\UI
+	 */
+	public function get_admin_ui() {
+		return $this->admin_ui;
+	}
+
+	/**
+	 * @return Settings
+	 */
+	public function get_settings() {
+		return $this->settings;
 	}
 }

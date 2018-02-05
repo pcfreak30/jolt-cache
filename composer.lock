@@ -1,207 +1,232 @@
 {
-  "_readme": [
-    "This file locks the dependencies of your project to a known state",
-    "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
-    "This file is @generated automatically"
-  ],
-  "content-hash": "111f090f1dd2f97bb07e365e8090dac9",
-  "packages": [
-    {
-      "name": "level-2/dice",
-      "version": "dev-v2.0-PHP5.4-5.5",
-      "source": {
-        "type": "git",
-        "url": "https://github.com/Level-2/Dice.git",
-        "reference": "33e5401c4a577b7d8dc7dc04db295fe5084343c4"
-      },
-      "dist": {
-        "type": "zip",
-        "url": "https://api.github.com/repos/Level-2/Dice/zipball/33e5401c4a577b7d8dc7dc04db295fe5084343c4",
-        "reference": "33e5401c4a577b7d8dc7dc04db295fe5084343c4",
-        "shasum": ""
-      },
-      "require": {
-        "php": ">=5.4.0"
-      },
-      "type": "library",
-      "autoload": {
-        "psr-4": {
-          "Dice\\": "./"
-        }
-      },
-      "notification-url": "https://packagist.org/downloads/",
-      "license": [
-        "BSD-2-Clause"
-      ],
-      "authors": [
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "2ff2507d60b5084fc519dd131085d55c",
+    "packages": [
         {
-          "name": "Tom Butler",
-          "email": "tom@r.je"
-        }
-      ],
-      "description": "A minimalist Dependency injection container (DIC) for PHP. Please note: This branch is only compatible with PHP5.6. 5.5, 5.4 and 5.3 compatible version is available as a separate branch on github. ",
-      "homepage": "http://r.je/dice.html",
-      "keywords": [
-        "dependency injection",
-        "dependency injection container",
-        "di",
-        "ioc"
-      ],
-      "time": "2015-11-30T17:19:11+00:00"
-    },
-    {
-      "name": "masterminds/html5",
-      "version": "2.2.2",
-      "source": {
-        "type": "git",
-        "url": "https://github.com/Masterminds/html5-php.git",
-        "reference": "7866e93dcf0245de22378414e0c2c7350abc45af"
-      },
-      "dist": {
-        "type": "zip",
-        "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/7866e93dcf0245de22378414e0c2c7350abc45af",
-        "reference": "7866e93dcf0245de22378414e0c2c7350abc45af",
-        "shasum": ""
-      },
-      "require": {
-        "ext-libxml": "*",
-        "php": ">=5.3.0"
-      },
-      "require-dev": {
-        "phpunit/phpunit": "4.*",
-        "sami/sami": "~2.0",
-        "satooshi/php-coveralls": "1.0.*"
-      },
-      "type": "library",
-      "extra": {
-        "branch-alias": {
-          "dev-master": "2.2-dev"
-        }
-      },
-      "autoload": {
-        "psr-4": {
-          "Masterminds\\": "src"
-        }
-      },
-      "notification-url": "https://packagist.org/downloads/",
-      "license": [
-        "MIT"
-      ],
-      "authors": [
-        {
-          "name": "Matt Butcher",
-          "email": "technosophos@gmail.com"
+            "name": "composepress/core",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "../composepress",
+                "reference": "907266da4d011d716967dcd6f3867a9e03a892e0",
+                "shasum": null
+            },
+            "require": {
+                "level-2/dice": "dev-v2.0-PHP5.4-5.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ComposePress\\Core\\": "src/"
+                }
+            },
+            "autoload-dev": {
+                "psr-4": {
+                    "ComposePress\\Core\\": "tests/"
+                }
+            },
+            "license": [
+                "LGPL3"
+            ],
+            "authors": [
+                {
+                    "name": "Derrick Hammer",
+                    "email": "derrick@derrickhammer.com"
+                }
+            ],
+            "description": "A simple PSR-4 and composer ready plugin framework for the modern wordpress age"
         },
         {
-          "name": "Asmir Mustafic",
-          "email": "goetas@gmail.com"
+            "name": "composepress/settings",
+            "version": "dev-master",
+            "dist": {
+                "type": "path",
+                "url": "../composepress-settings",
+                "reference": "9056c9bf8e32be52689692dbb297ab42d1e6cf75",
+                "shasum": null
+            },
+            "require": {
+                "composepress/core": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ComposePress\\": "src/"
+                }
+            },
+            "license": [
+                "GPL3"
+            ],
+            "authors": [
+                {
+                    "name": "Derrick Hammer",
+                    "email": "derrick@derrickhammer.com"
+                }
+            ]
         },
         {
-          "name": "Matt Farina",
-          "email": "matt@mattfarina.com"
-        }
-      ],
-      "description": "An HTML5 parser and serializer.",
-      "homepage": "http://masterminds.github.io/html5-php",
-      "keywords": [
-        "HTML5",
-        "dom",
-        "html",
-        "parser",
-        "querypath",
-        "serializer",
-        "xml"
-      ],
-      "time": "2016-09-22T11:01:11+00:00"
-    },
-    {
-      "name": "pcfreak30/composepress",
-      "version": "0.2.4",
-      "source": {
-        "type": "git",
-        "url": "https://github.com/pcfreak30/composepress.git",
-        "reference": "7150aac5e758503d7dfb5bb94235e2bc7a8a47cc"
-      },
-      "dist": {
-        "type": "zip",
-        "url": "https://api.github.com/repos/pcfreak30/composepress/zipball/7150aac5e758503d7dfb5bb94235e2bc7a8a47cc",
-        "reference": "7150aac5e758503d7dfb5bb94235e2bc7a8a47cc",
-        "shasum": ""
-      },
-      "require-dev": {
-        "10up/wp_mock": "dev-dev",
-        "mockery/mockery": "^0.9.9"
-      },
-      "type": "library",
-      "autoload": {
-        "psr-4": {
-          "pcfreak30\\ComposePress\\": "src/"
-        }
-      },
-      "notification-url": "https://packagist.org/downloads/",
-      "license": [
-        "LGPL3"
-      ],
-      "authors": [
-        {
-          "name": "Derrick Hammer",
-          "email": "derrick@derrickhammer.com"
-        }
-      ],
-      "description": "A simple PSR-4 and composer ready plugin framework for the modern wordpress age",
-      "time": "2017-08-27T00:03:07+00:00"
-    },
-    {
-      "name": "querypath/querypath",
-      "version": "3.0.5",
-      "source": {
-        "type": "git",
-        "url": "https://github.com/technosophos/querypath.git",
-        "reference": "6b8e2395fac61fac25bbe962f94def556cb85f7d"
-      },
-      "dist": {
-        "type": "zip",
-        "url": "https://api.github.com/repos/technosophos/querypath/zipball/6b8e2395fac61fac25bbe962f94def556cb85f7d",
-        "reference": "6b8e2395fac61fac25bbe962f94def556cb85f7d",
-        "shasum": ""
-      },
-      "require": {
-        "masterminds/html5": "2.*",
-        "php": ">=5.3.0"
-      },
-      "type": "library",
-      "autoload": {
-        "psr-0": {
-          "QueryPath": "src/"
+            "name": "level-2/dice",
+            "version": "dev-v2.0-PHP5.4-5.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Level-2/Dice.git",
+                "reference": "33e5401c4a577b7d8dc7dc04db295fe5084343c4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Level-2/Dice/zipball/33e5401c4a577b7d8dc7dc04db295fe5084343c4",
+                "reference": "33e5401c4a577b7d8dc7dc04db295fe5084343c4",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Dice\\": "./"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-2-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Tom Butler",
+                    "email": "tom@r.je"
+                }
+            ],
+            "description": "A minimalist Dependency injection container (DIC) for PHP. Please note: This branch is only compatible with PHP5.6. 5.5, 5.4 and 5.3 compatible version is available as a separate branch on github. ",
+            "homepage": "http://r.je/dice.html",
+            "keywords": [
+                "dependency injection",
+                "dependency injection container",
+                "di",
+                "ioc"
+            ],
+            "time": "2015-11-30T17:19:11+00:00"
         },
-        "files": [
-          "src/qp_functions.php"
-        ]
-      },
-      "notification-url": "https://packagist.org/downloads/",
-      "license": [
-        "MIT"
-      ],
-      "description": "HTML/XML querying (CSS 4 or XPath) and processing (like jQuery)",
-      "homepage": "https://github.com/technosophos/querypath",
-      "keywords": [
-        "css",
-        "html",
-        "jquery",
-        "xml",
-        "xslt"
-      ],
-      "time": "2016-08-01T22:40:30+00:00"
-    }
-  ],
-  "packages-dev": [],
-  "aliases": [],
-  "minimum-stability": "stable",
-  "stability-flags": {
-    "level-2/dice": 20
-  },
-  "prefer-stable": false,
-  "prefer-lowest": false,
-  "platform": [],
-  "platform-dev": []
+        {
+            "name": "masterminds/html5",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Masterminds/html5-php.git",
+                "reference": "30aab1f62ea613643a6ddc14678c3596540dfea9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/30aab1f62ea613643a6ddc14678c3596540dfea9",
+                "reference": "30aab1f62ea613643a6ddc14678c3596540dfea9",
+                "shasum": ""
+            },
+            "require": {
+                "ext-libxml": "*",
+                "php": ">=5.3.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "sami/sami": "^3.0",
+                "satooshi/php-coveralls": "1.0.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "3.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Masterminds\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Butcher",
+                    "email": "technosophos@gmail.com"
+                },
+                {
+                    "name": "Asmir Mustafic",
+                    "email": "goetas@gmail.com"
+                },
+                {
+                    "name": "Matt Farina",
+                    "email": "matt@mattfarina.com"
+                }
+            ],
+            "description": "An HTML5 parser and serializer.",
+            "homepage": "http://masterminds.github.io/html5-php",
+            "keywords": [
+                "HTML5",
+                "dom",
+                "html",
+                "parser",
+                "querypath",
+                "serializer",
+                "xml"
+            ],
+            "time": "2016-09-22T10:48:08+00:00"
+        },
+        {
+            "name": "querypath/querypath",
+            "version": "3.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/technosophos/querypath.git",
+                "reference": "9d4a1d31e3b4821d9987b67a5bfb372690e10acf"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/technosophos/querypath/zipball/9d4a1d31e3b4821d9987b67a5bfb372690e10acf",
+                "reference": "9d4a1d31e3b4821d9987b67a5bfb372690e10acf",
+                "shasum": ""
+            },
+            "require": {
+                "masterminds/html5": "dev-master",
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "QueryPath": "src/"
+                },
+                "files": [
+                    "src/qp_functions.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "HTML/XML querying (CSS 4 or XPath) and processing (like jQuery)",
+            "homepage": "https://github.com/technosophos/querypath",
+            "keywords": [
+                "css",
+                "html",
+                "jquery",
+                "xml",
+                "xslt"
+            ],
+            "time": "2013-07-03T21:48:50+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "level-2/dice": 20
+    },
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
 }

@@ -1,17 +1,17 @@
 <?php
 
-namespace Jolt\Cache;
+namespace JoltCache;
 
-use pcfreak30\ComposePress\ComponentAbstract;
+use ComposePress\Core\Abstracts\Component;
 use QueryPath\DOMQuery;
 
 /**
  * Class Request
  *
  * @package Jolt\Cache
- * @property \Jolt $plugin
+ * @property \JoltCache $plugin
  */
-class Request extends ComponentAbstract {
+class Request extends Component {
 
 	private $request_uri;
 
@@ -34,11 +34,11 @@ class Request extends ComponentAbstract {
 
 		$request_uri = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 		// Don't cache disallowed extensions.
-		if ( strtolower( $_SERVER['REQUEST_URI'] ) !== '/index.php' && in_array( pathinfo( $request_uri, PATHINFO_EXTENSION ), [
+		if ( strtolower( $_SERVER['REQUEST_URI'] ) !== '/index.php' && in_array( pathinfo( $request_uri, PATHINFO_EXTENSION ), apply_filters( 'jolt_cache_dallowed_extensions', [
 				'php',
 				'xml',
 				'xsl',
-			], true ) ) {
+			] ), true ) ) {
 			$stop = true;
 		}
 
@@ -54,7 +54,7 @@ class Request extends ComponentAbstract {
 			return;
 		}
 		$this->request_uri = $request_uri;
-		/** @var \Jolt\Cache\Store\StoreAbstract $store */
+		/** @var \JoltCache\Abstracts\Store $store */
 		$store = $this->plugin->cache_manager->get_cache_store();
 		$cache = $store->get_url( $this->request_uri );
 		if ( ! empty( $cache ) ) {
@@ -113,7 +113,7 @@ class Request extends ComponentAbstract {
 			$cache = html5qp( $cache );
 		}
 		if ( apply_filters( 'jolt_cache_store_cache', true ) ) {
-			/** @var \Jolt\Cache\Store\StoreAbstract $store */
+			/** @var \JoltCache\Abstracts\Store $store */
 			$store = $this->plugin->cache_manager->get_cache_store();
 
 			$cache = $cache->html5();

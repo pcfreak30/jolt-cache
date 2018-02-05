@@ -1,22 +1,23 @@
 <?php
 
-namespace Jolt\Cache;
+namespace JoltCache\Managers;
 
-use pcfreak30\ComposePress\ManagerAbstract;
+use ComposePress\Core\Abstracts\Manager;
+
 
 /**
  * Class Manager
  */
-class Manager extends ManagerAbstract {
+class Store extends Manager {
 
-	const MODULE_NAMESPACE = '\\Jolt\\Cache\\Store';
+	const MODULE_NAMESPACE = '\JoltCache\Store';
 
 	protected $modules = [ 'File' ];
 
 	/**
 	 * @param string|null $name
 	 *
-	 * @return bool|\Jolt\Cache\Store\StoreAbstract
+	 * @return bool|\JoltCache\Abstracts\Store
 	 * @throws \Exception
 	 */
 	public function get_cache_store( $name = null ) {

@@ -7,10 +7,10 @@ use Dice\Dice;
  * Singleton instance function. We will not use a global at all as that defeats the purpose of a singleton and is a bad design overall
  *
  * @SuppressWarnings(PHPMD.StaticAccess)
- * @return \Jolt
+ * @return \JoltCache
  */
 function jolt_cache() {
-	return jolt_cache_container()->create( '\Jolt' );
+	return jolt_cache_container()->create( '\JoltCache' );
 }
 
 /**

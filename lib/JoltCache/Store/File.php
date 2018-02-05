@@ -1,16 +1,19 @@
 <?php
 
 
-namespace Jolt\Cache\Store;
+namespace JoltCache\Store;
 
 
-class File extends StoreAbstract {
+use ComposePress\Settings\Abstracts\Page;
+use JoltCache\Abstracts\Store;
+
+class File extends Store {
 	const NAME = 'file';
 	const FRIENDLY_NAME = 'Filesystem';
 
 	public function purge_url( $url ) {
-		if ( $this->plugin->get_wp_filesystem()->is_file( $url ) ) {
-			$this->plugin->get_wp_filesystem()->delete( $this->plugin->config->cache_path . $this->sanitize_url( $url ) );
+		if ( $this->plugin->wp_filesystem->is_file( $url ) ) {
+			$this->plugin->wp_filesystem->delete( $this->plugin->config->cache_path . $this->sanitize_url( $url ) );
 		}
 	}
 
@@ -69,17 +72,17 @@ class File extends StoreAbstract {
 		$filename = $this->get_url_path( $url );
 		$dirname  = dirname( $filename );
 
-		if ( ! $this->plugin->get_wp_filesystem()->is_dir( $dirname ) ) {
+		if ( ! $this->plugin->wp_filesystem->is_dir( $dirname ) ) {
 			$this->mkdir( $dirname );
 		}
-		$this->plugin->get_wp_filesystem()->put_contents( $filename, $content );
+		$this->plugin->wp_filesystem->put_contents( $filename, $content );
 		if ( function_exists( 'gzencode' ) ) {
-			$this->plugin->get_wp_filesystem()->put_contents( $filename . '_gzip', gzencode( $content, apply_filters( 'jolt_cache_gzencode_level_compression', 3 ) ) );
+			$this->plugin->wp_filesystem->put_contents( $filename . '_gzip', gzencode( $content, apply_filters( 'jolt_cache_gzencode_level_compression', 3 ) ) );
 		}
 	}
 
 	private function mkdir( $target ) {
-		$filesystem = $this->plugin->get_wp_filesystem();
+		$filesystem = $this->plugin->wp_filesystem;
 		// from php.net/mkdir user contributed notes.
 		$target = str_replace( DIRECTORY_SEPARATOR . DIRECTORY_SEPARATOR, DIRECTORY_SEPARATOR, $target );
 
@@ -117,7 +120,7 @@ class File extends StoreAbstract {
 	public function url_exists( $url ) {
 		$filename = $this->get_url_path( $url );
 
-		return $this->plugin->get_wp_filesystem()->is_file( $filename );
+		return $this->plugin->wp_filesystem->is_file( $filename );
 	}
 
 	/**

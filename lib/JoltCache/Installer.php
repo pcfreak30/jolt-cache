@@ -1,17 +1,17 @@
 <?php
 
-namespace Jolt\Cache;
+namespace JoltCache;
 
-use pcfreak30\ComposePress\ComponentAbstract;
+use ComposePress\Core\Abstracts\Component;
 
 
 /**
  * Class Installer
  *
  * @package Jolt\Cache
- * @property \Jolt $plugin
+ * @property \JoltCache $plugin
  */
-class Installer extends ComponentAbstract {
+class Installer extends Component {
 	private $advanced_cache_path;
 
 	/**
@@ -23,8 +23,8 @@ class Installer extends ComponentAbstract {
 
 	public function install() {
 		$advanced_cache = $this->get_advanced_cache();
-		if ( ! $this->plugin->get_wp_filesystem()->is_file( $this->advanced_cache_path ) || hash_file( 'sha256', $this->advanced_cache_path ) !== hash( 'sha256', $advanced_cache ) ) {
-			$this->plugin->get_wp_filesystem()->put_contents( $this->advanced_cache_path, $advanced_cache );
+		if ( ! $this->plugin->wp_filesystem->is_file( $this->advanced_cache_path ) || hash_file( 'sha256', $this->advanced_cache_path ) !== hash( 'sha256', $advanced_cache ) ) {
+			$this->plugin->wp_filesystem->put_contents( $this->advanced_cache_path, $advanced_cache );
 		}
 		$this->set_wp_cache_define( true );
 	}
@@ -106,15 +106,15 @@ class Installer extends ComponentAbstract {
 		array_splice( $wp_config, $wp_cache_line - 1, 0, '' );
 
 
-		$this->plugin->get_wp_filesystem()->put_contents( $wp_config_path, implode( PHP_EOL, $wp_config ) );
+		$this->plugin->wp_filesystem->put_contents( $wp_config_path, implode( PHP_EOL, $wp_config ) );
 
 		$chmod = defined( 'FS_CHMOD_FILE' ) ? FS_CHMOD_FILE : 0644;
-		$this->plugin->get_wp_filesystem()->chmod( $wp_config_path, $chmod );
+		$this->plugin->wp_filesystem->chmod( $wp_config_path, $chmod );
 	}
 
 	public function uninstall() {
-		if ( $this->plugin->get_wp_filesystem()->is_file( $this->advanced_cache_path ) ) {
-			$this->plugin->get_wp_filesystem()->delete( $this->advanced_cache_path );
+		if ( $this->plugin->wp_filesystem->is_file( $this->advanced_cache_path ) ) {
+			$this->plugin->wp_filesystem->delete( $this->advanced_cache_path );
 		}
 		$this->set_wp_cache_define( false );
 	}
