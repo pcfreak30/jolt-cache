@@ -151,9 +151,9 @@ class Config extends Component {
 	 * @return bool|mixed
 	 */
 	public function load() {
-		$config_base = $this->config_folder . $this->cache_host;
+		$config_base = $this->config_folder . DIRECTORY_SEPARATOR . $this->cache_host;
 		$config_file = $config_base . '.php';
-		if ( $config_file && 0 === stripos( $config_file, $this->config_folder ) ) {
+		if ( is_file( $config_file ) ) {
 			return include $config_file;
 		}
 		$path = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
