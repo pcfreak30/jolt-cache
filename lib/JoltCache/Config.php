@@ -36,13 +36,19 @@ class Config extends Component {
 	private $cache_host;
 
 	/**
+	 * @var string
+	 */
+	private $config_folder;
+
+	/**
 	 *
 	 */
 	public function init() {
-		$this->cache_base_path = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'JoltCache' . DIRECTORY_SEPARATOR;
+		$this->cache_base_path = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'jolt-cache' . DIRECTORY_SEPARATOR;
 		$this->cache_path      = $this->cache_base_path . 'files' . DIRECTORY_SEPARATOR;
+		$this->config_folder   = realpath( WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'jolt-cache-config' ) . DIRECTORY_SEPARATOR;
 		$this->wp_config_path  = $this->find_wp_config();
-		$host                  = ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : time();
+		$host                  = ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '';
 		$host                  = trim( strtolower( $host ), '.' );
 		$this->cache_host      = urlencode( $host );
 
@@ -109,5 +115,65 @@ class Config extends Component {
 	 */
 	public function get_cache_host() {
 		return $this->cache_host;
+	}
+
+	/**
+	 *
+	 */
+	public function save() {
+		$options = [
+			'store' => $this->plugin->settings->get( 'general.cache_store' ),
+		];
+
+		$options = apply_filters( "{$this->plugin->safe_slug}_build_config", $options );
+
+		$config = $this->plugin->templates->get( 'config', [
+			'options' => $options,
+		] );
+
+		$domain = strtolower( parse_url( site_url(), PHP_URL_HOST ) );
+		$path   = trim( parse_url( site_url(), PHP_URL_PATH ) );
+		if ( '/' === $path ) {
+			$path = '';
+		}
+		$path = str_replace( '/', '.', $path );
+		if ( ! $this->plugin->wp_filesystem->is_dir( $this->config_folder ) ) {
+			$this->plugin->wp_filesystem->mkdir( $this->config_folder );
+		}
+		$config_file = $this->config_folder . $domain . $path . '.php';
+
+		$this->plugin->wp_filesystem->put_contents( $config_file, $config );
+	}
+
+	/**
+	 * @return bool|mixed
+	 */
+	public function load() {
+		$config_base = $this->config_folder . $this->cache_host;
+		$config_file = $config_base . '.php';
+		if ( $config_file && 0 === stripos( $config_file, $this->config_folder ) ) {
+			return include $config_file;
+		}
+		$path = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+		$path = str_replace( '\\', '/', $path );
+		$path = preg_replace( '|(?<=.)/+|', '/', $path );
+		$path = explode( '%2F', trim( rawurlencode( $path ), '%2F' ) );
+
+		$directory = '';
+
+		foreach ( $path as $p ) {
+			$files = array_filter( [
+				$config_base . '.' . $p . '.php',
+				$config_base . '.' . $directory . $p . '.php',
+			], 'is_file' );
+			if ( 0 < count( $files ) ) {
+				$config_file = array_shift( $files );
+
+				return include $config_file;
+			}
+			$directory .= $p . '.';
+		}
+
+		return false;
 	}
 }
