@@ -159,6 +159,7 @@ class JoltCache extends Plugin {
 	 * @return void
 	 */
 	public function activate() {
+		$this->early_load = false;
 		$this->installer->install();
 	}
 
