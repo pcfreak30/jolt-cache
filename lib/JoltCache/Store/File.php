@@ -129,4 +129,13 @@ class File extends Store {
 	public function is_supported() {
 		return true;
 	}
+
+	/**
+	 * @param \ComposePress\Settings\Abstracts\Page $page
+	 *
+	 * @return void
+	 */
+	public function register_settings( Page $page ) {
+		// TODO: Implement register_settings() method.
+	}
 }
