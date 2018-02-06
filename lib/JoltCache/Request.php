@@ -51,6 +51,8 @@ class Request extends Component {
 			$stop = true;
 		}
 		if ( $stop ) {
+			$this->maybe_define_constant( 'DONOTCACHEPAGE', true );
+
 			return;
 		}
 		$this->request_uri = $request_uri;
@@ -105,19 +107,27 @@ class Request extends Component {
 	private function process_cache_buffer( $cache ) {
 		$is_html = false;
 
-		if ( preg_match( '/(<\/html>)/i', $cache ) ) {
+		if ( apply_filters( 'jolt_cache_do_buffer', true ) && preg_match( '/(<\/html>)/i', $cache ) ) {
 			$cache   = apply_filters( 'jolt_cache_buffer', html5qp( $cache ) );
 			$is_html = true;
 		}
-		if ( $is_html && ! ( $cache instanceof DOMQuery ) ) {
-			$cache = html5qp( $cache );
+		if ( ! $is_html ) {
+			return $cache;
 		}
+		if ( apply_filters( 'jolt_cache_do_dom_buffer', true ) ) {
+			if ( ! ( $cache instanceof DOMQuery ) ) {
+				$cache = html5qp( $cache );
+			}
+
+			$cache = $cache->html5();
+		}
+
+		$cache = apply_filters( 'jolt_cache_post_buffer', $cache );
+
 		if ( apply_filters( 'jolt_cache_store_cache', true ) ) {
 			/** @var \JoltCache\Abstracts\Store $store */
 			$store = $this->plugin->cache_manager->get_cache_store();
 
-			$cache = $cache->html5();
-			$cache = apply_filters( 'jolt_cache_post_buffer', $cache );
 
 			/** @var string $cache */
 			if ( $is_html ) {
@@ -131,11 +141,8 @@ class Request extends Component {
 			}
 		}
 		/** @var DOMQuery $cache */
-		if ( $is_html && ( $cache instanceof DOMQuery ) ) {
+		if ( $cache instanceof DOMQuery ) {
 			$cache = $cache->html5();
-		}
-		if ( ! $is_html ) {
-			$cache .= $this->get_cache_footprint( false );
 		}
 
 		return $cache;
@@ -154,5 +161,58 @@ class Request extends Component {
 		$footprint .= ' -->';
 
 		return $footprint;
+	}
+
+	public function is_ssl() {
+		if ( isset( $_SERVER['HTTPS'] ) ) {
+			if ( 'on' === strtolower( $_SERVER['HTTPS'] ) ) {
+				return true;
+			}
+			if ( '1' === $_SERVER['HTTPS'] ) {
+				return true;
+			}
+		}
+		if ( isset( $_SERVER['SERVER_PORT'] ) && ( '443' === $_SERVER['SERVER_PORT'] ) ) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public function get_ip() {
+		$keys = [
+			'HTTP_CF_CONNECTING_IP', // CF = CloudFlare.
+			'HTTP_CLIENT_IP',
+			'HTTP_X_FORWARDED_FOR',
+			'HTTP_X_FORWARDED',
+			'HTTP_X_CLUSTER_CLIENT_IP',
+			'HTTP_X_REAL_IP',
+			'HTTP_FORWARDED_FOR',
+			'HTTP_FORWARDED',
+			'REMOTE_ADDR',
+		];
+
+		foreach ( $keys as $key ) {
+			if ( array_key_exists( $key, $_SERVER ) ) {
+				$ip = explode( ',', $_SERVER[ $key ] );
+				$ip = end( $ip );
+
+				if ( false !== filter_var( $ip, FILTER_VALIDATE_IP ) ) {
+					return $ip;
+				}
+			}
+		}
+
+		return '0.0.0.0';
+	}
+
+	/**
+	 * @param string $name
+	 * @param bool   $value
+	 */
+	public function maybe_define_constant( $name, $value ) {
+		if ( ! defined( $name ) ) {
+			define( $name, (bool) $value );
+		}
 	}
 }
