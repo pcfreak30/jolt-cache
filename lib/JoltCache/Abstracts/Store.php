@@ -36,7 +36,7 @@ abstract class Store extends Component {
 	 */
 	public function init() {
 		if ( $this->is_supported() ) {
-			add_filter( 'jolt_cache_stores', [ $this, 'register' ] );
+			add_filter( "{$this->plugin->safe_slug}_stores", [ $this, 'register' ] );
 		}
 	}
 
