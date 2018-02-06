@@ -67,6 +67,8 @@ class JoltCache extends Plugin {
 	 */
 	private $settings;
 
+	private $init = false;
+
 
 	/**
 	 * Jolt constructor.
@@ -167,6 +169,9 @@ class JoltCache extends Plugin {
 	 * @return $this
 	 */
 	public function init() {
+		if ( $this->init ) {
+			return $this;
+		}
 		$this->maybe_early_load();
 		do_action( 'jolt_cache_before_init' );
 
@@ -179,6 +184,7 @@ class JoltCache extends Plugin {
 		if ( ! $this->early_load && ! has_action( 'plugins_loaded', [ $this, 'do_loaded_delayed' ] ) ) {
 			do_action( 'jolt_cache_loaded' );
 		}
+		$this->init = true;
 
 		return $this;
 	}
