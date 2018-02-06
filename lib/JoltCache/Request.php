@@ -182,11 +182,8 @@ class Request extends Component {
 				return true;
 			}
 		}
-		if ( isset( $_SERVER['SERVER_PORT'] ) && ( '443' === $_SERVER['SERVER_PORT'] ) ) {
-			return true;
-		}
 
-		return false;
+		return isset( $_SERVER['SERVER_PORT'] ) && ( '443' === $_SERVER['SERVER_PORT'] );
 	}
 
 	public function get_ip() {
