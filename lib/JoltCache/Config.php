@@ -46,7 +46,7 @@ class Config extends Component {
 	public function init() {
 		$this->cache_base_path = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR . 'jolt-cache' . DIRECTORY_SEPARATOR;
 		$this->cache_path      = $this->cache_base_path . 'files' . DIRECTORY_SEPARATOR;
-		$this->config_folder   = realpath( WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'jolt-cache-config' ) . DIRECTORY_SEPARATOR;
+		$this->config_folder   = WP_CONTENT_DIR . DIRECTORY_SEPARATOR . 'jolt-cache-config';
 		$this->wp_config_path  = $this->find_wp_config();
 		$host                  = ( isset( $_SERVER['HTTP_HOST'] ) ) ? $_SERVER['HTTP_HOST'] : '';
 		$host                  = trim( strtolower( $host ), '.' );
@@ -140,6 +140,8 @@ class Config extends Component {
 		if ( ! $this->plugin->wp_filesystem->is_dir( $this->config_folder ) ) {
 			$this->plugin->wp_filesystem->mkdir( $this->config_folder );
 		}
+		$this->config_folder = realpath( $this->config_folder ) . DIRECTORY_SEPARATOR;
+
 		$config_file = $this->config_folder . $domain . $path . '.php';
 
 		$this->plugin->wp_filesystem->put_contents( $config_file, $config );
