@@ -23,6 +23,14 @@ abstract class Store extends Component {
 	 */
 	const FRIENDLY_NAME = '';
 
+	const TYPE = '';
+
+	const TYPE_INTERNAL = 'internal';
+
+	const TYPE_EXTERNAL = 'external';
+
+	const TYPE_3RDPARTY = '3rdparty';
+
 	/**
 	 *
 	 */
@@ -38,7 +46,7 @@ abstract class Store extends Component {
 	 * @return mixed
 	 */
 	public function register( $stores ) {
-		$stores[ $this->get_name() ] = $this->get_friendly_name();
+		$stores[ $this->get_name() ] = $this;
 
 		return $stores;
 	}
@@ -54,7 +62,14 @@ abstract class Store extends Component {
 	 * @return string
 	 */
 	public function get_friendly_name() {
-		return __( static::FRIENDLY_NAME, $this->plugin->get_safe_slug() );
+		return __( static::FRIENDLY_NAME, $this->plugin->safe_slug );
+	}
+
+	/**
+	 * @return string
+	 */
+	public function get_type() {
+		return __( static::TYPE, $this->plugin->safe_slug );
 	}
 
 	/**
@@ -105,4 +120,11 @@ abstract class Store extends Component {
 	 * @return bool
 	 */
 	abstract public function is_supported();
+
+	/**
+	 * @param \ComposePress\Settings\Abstracts\Page $page
+	 *
+	 * @return void
+	 */
+	abstract public function register_settings( Page $page );
 }
