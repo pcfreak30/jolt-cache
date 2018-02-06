@@ -15,6 +15,8 @@ class Request extends Component {
 
 	private $request_uri;
 
+	private $cache_config = [];
+
 	/**
 	 *
 	 */
@@ -56,9 +58,17 @@ class Request extends Component {
 			return;
 		}
 		$this->request_uri = $request_uri;
+
+		$this->cache_config = $this->plugin->config->load();
+
+		if ( empty( $this->cache_config ) ) {
+			return;
+		}
+
 		/** @var \JoltCache\Abstracts\Store $store */
-		$store = $this->plugin->cache_manager->get_cache_store();
+		$store = $this->plugin->cache_manager->get_cache_store( $this->cache_config['store'] );
 		$cache = $store->get_url( $this->request_uri );
+
 		if ( ! empty( $cache ) ) {
 			$time = $store->get_url_modified_time( $this->request_uri );
 			$this->serve_cache( $cache, $time );
@@ -126,7 +136,7 @@ class Request extends Component {
 
 		if ( apply_filters( "{$this->plugin->safe_slug}_store_cache", true ) ) {
 			/** @var \JoltCache\Abstracts\Store $store */
-			$store = $this->plugin->cache_manager->get_cache_store();
+			$store = $this->plugin->cache_manager->get_cache_store( $this->cache_config['store'] );
 
 
 			/** @var string $cache */
