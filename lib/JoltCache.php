@@ -13,14 +13,14 @@ use ComposePress\Settings;
 /**
  * Class Jolt
  *
- * @property \JoltCache\Config                $config
- * @property \JoltCache\Installer             $installer
- * @property \JoltCache\Request               $request
- * @property \JoltCache\Templates             $templates
- * @property \JoltCache\Managers\Store        $cache_manager
+ * @property \JoltCache\Config         $config
+ * @property \JoltCache\Installer      $installer
+ * @property \JoltCache\Request        $request
+ * @property \JoltCache\Templates      $templates
+ * @property \JoltCache\Managers\Store $cache_manager
  * @property \\ComposePress\Core $settings
- * @property \JoltCache\UI                    $admin_ui
- * @property bool                             $early_load
+ * @property \JoltCache\UI             $admin_ui
+ * @property bool                      $early_load
  */
 class JoltCache extends Plugin {
 
@@ -78,13 +78,13 @@ class JoltCache extends Plugin {
 	 */
 	/** @noinspection PhpMissingParentConstructorInspection */
 	/** @noinspection MagicMethodsValidityInspection
-	 * @param \JoltCache\Config                $config
-	 * @param \JoltCache\Templates             $templates
-	 * @param \JoltCache\Installer             $installer
-	 * @param \JoltCache\Request               $request
-	 * @param \JoltCache\Managers\Store        $cache_manager
-	 * @param \ComposePress\Settings $settings
-	 * @param \JoltCache\UI                    $admin_ui
+	 * @param \JoltCache\Config         $config
+	 * @param \JoltCache\Templates      $templates
+	 * @param \JoltCache\Installer      $installer
+	 * @param \JoltCache\Request        $request
+	 * @param \JoltCache\Managers\Store $cache_manager
+	 * @param \ComposePress\Settings    $settings
+	 * @param \JoltCache\UI             $admin_ui
 	 *
 	 * @throws \ComposePress\Core\Exception\ContainerInvalid
 	 * @throws \ComposePress\Core\Exception\ContainerNotExists
@@ -126,6 +126,14 @@ class JoltCache extends Plugin {
 			return;
 		}
 		$this->early_load = false;
+	}
+
+	public function get_wp_filesystem( $args = [] ) {
+		if ( $this->early_load ) {
+			return false;
+		}
+
+		return parent::get_wp_filesystem( $args );
 	}
 
 	/**
@@ -175,6 +183,7 @@ class JoltCache extends Plugin {
 	}
 
 	public function do_loaded_delayed() {
+		$this->early_load = false;
 		do_action( 'jolt_cache_loaded' );
 	}
 
