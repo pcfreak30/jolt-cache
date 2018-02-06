@@ -115,21 +115,17 @@ class Request extends Component {
 	 * @param string $cache
 	 */
 	private function process_cache_buffer( $cache ) {
-		$is_html = false;
+		$is_html = preg_match( '/(<\/html>)/i', $cache );
 
-		if ( apply_filters( "{$this->plugin->safe_slug}_do_buffer", true ) && preg_match( '/(<\/html>)/i', $cache ) ) {
-			$cache   = apply_filters( 'jolt_cache_buffer', html5qp( $cache ) );
-			$is_html = true;
-		}
 		if ( ! $is_html ) {
 			return $cache;
 		}
-		if ( apply_filters( "{$this->plugin->safe_slug}_do_dom_buffer", true ) ) {
+
+		if ( apply_filters( "{$this->plugin->safe_slug}_do_dom_buffer", true ) && has_filter( "{$this->plugin->safe_slug}_buffer" ) ) {
 			if ( ! ( $cache instanceof DOMQuery ) ) {
 				$cache = html5qp( $cache );
 			}
-
-			$cache = $cache->html5();
+			$cache = apply_filters( 'jolt_cache_buffer', $cache->html5() );
 		}
 
 		$cache = apply_filters( "{$this->plugin->safe_slug}_post_buffer", $cache );
