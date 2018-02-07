@@ -31,7 +31,7 @@ class Installer extends Component {
 
 	public function get_advanced_cache() {
 		return $this->plugin->templates->get( 'advanced-cache', [
-			'composer' => dirname( $this->plugin->plugin_file ) . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php',
+			'bootstrap' => dirname( $this->plugin->plugin_file ) . DIRECTORY_SEPARATOR . 'bootstrap.php',
 		] );
 	}
 

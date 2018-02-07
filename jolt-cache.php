@@ -67,9 +67,10 @@ function jolt_cache_php_vendor_missing() {
 if ( version_compare( PHP_VERSION, '5.4.0' ) < 0 ) {
 	add_action( 'admin_notices', 'jolt_cache_php_upgrade_notice' );
 } else {
-	$autoload = __DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
-	if ( file_exists( $autoload ) ) {
-		include_once $autoload;
+	$autoload_dir = __DIR__ . DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR;
+	$bootstrap    = __DIR__ . DIRECTORY_SEPARATOR . 'bootstrap.php';
+	if ( is_dir( $autoload_dir ) && file_exists( $bootstrap ) ) {
+		include_once $bootstrap;
 		add_action( 'plugins_loaded', 'jolt_cache_init', 11 );
 		register_activation_hook( __FILE__, 'jolt_cache_activate' );
 		register_deactivation_hook( __FILE__, 'jolt_cache_deactivate' );

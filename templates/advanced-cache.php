@@ -9,10 +9,10 @@ if ( version_compare( PHP_VERSION, '5.4.0' ) < 0 ) {
 }
 
 define( 'JOLT_ADVANCED_CACHE', true );
-if ( file_exists( '<?= $composer ?>' ) ) {
-	require_once '<?= $composer ?>';
+if ( file_exists( '<?= $bootstrap ?>' ) ) {
+	require_once '<?= $bootstrap ?>';
 }
-if ( ! file_exists( '<?= $composer ?>' ) ) {
+if ( ! file_exists( '<?= $bootstrap ?>' ) ) {
 	define( 'JOLT_ADVANCED_CACHE_FAIL', true );
 }
 
