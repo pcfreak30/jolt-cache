@@ -36,11 +36,15 @@ class Request extends Component {
 
 		$request_uri = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 		// Don't cache disallowed extensions.
-		if ( strtolower( $_SERVER['REQUEST_URI'] ) !== '/index.php' && in_array( pathinfo( $request_uri, PATHINFO_EXTENSION ), apply_filters( 'jolt_cache_dallowed_extensions', [
-				'php',
-				'xml',
-				'xsl',
-			] ), true ) ) {
+		$extensions = apply_filters( 'jolt_cache_allowed_extensions', [
+			'php',
+			'xml',
+			'xsl',
+		] );
+		$extensions = array_map( 'strtolower', $extensions );
+		$extensions = array_flip( $extensions );
+
+		if ( strtolower( $_SERVER['REQUEST_URI'] ) !== '/index.php' && isset( $extensions[ $this->get_extension( $request_uri ) ] ) ) {
 			$stop = true;
 		}
 
@@ -217,5 +221,22 @@ class Request extends Component {
 		if ( ! defined( $name ) ) {
 			define( $name, (bool) $value );
 		}
+	}
+
+	private function get_extension( $path ) {
+		$query = strpos( $path, '?' );
+		if ( false !== $query ) {
+			$path = explode( '?', $path );
+			$path = array_shift( $path );
+		}
+		$parts    = explode( '/', $path );
+		$end_part = end( $parts );
+		$dot      = strpos( $end_part, '.' );
+		if ( false === $dot ) {
+			return '';
+		}
+		$ext = explode( '.', $end_part );
+
+		return end( $ext );
 	}
 }
