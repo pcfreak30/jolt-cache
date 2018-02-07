@@ -122,9 +122,6 @@ class JoltCache extends Plugin {
 		}
 		if ( ! doing_action( 'plugins_loaded' ) ) {
 			$this->early_load = true;
-			wp_set_lang_dir();
-			wp_load_translations_early();
-
 			return;
 		}
 		$this->early_load = false;
